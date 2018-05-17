@@ -5,7 +5,7 @@ def lexer(input):
   # anything between [] are comments that should be ignored.
 
   # remove all whitespace
-  input = input.replace(" ", "")
+  input = input.replace(" ", "").replace('\r', "").replace('\n', "")
 
   output = [] # list to be populated with tokens
   brac_count = 0 # if "enters a comment", brac_count increases
@@ -144,7 +144,9 @@ if __name__ == '__main__':
   print " "
   l = ["((a,b), (c, d));",
        "a;",
-       " (a,    (  b,  c [hubba]))    ;"]
+       " (a,    (  b,  c [hubba]))    ;",
+       "(a, (b, (c, (d, e))));",
+       "[This is a tree with for leaves!]((a,b), (c [third leaf],d))[The end];"]
   for s in l:
     tlist = lexer(s)
     t = parse_newick(tlist)
