@@ -76,6 +76,21 @@ class rooted_tree:
       s = s[:-1] + " ] "
     return s
       
+
+def parse_tree_rd(input):
+  if input[0] == '(':
+    output = rooted_tree()
+    child, rest = parse_tree_rd(input[1:])
+    output.append_child(child)
+    child, rest = parse_tree_rd(rest[1:])
+    output.append_child(child)
+    return output, rest[1:]
+  else:
+    return rooted_tree(input[0]), input[1:]
+
+
+
+# not using recursive decent!, see function parse_tree_rd instead.
 def parse_tree(input):
   # input: list of tokens
   # output: tree
@@ -134,10 +149,11 @@ def parse_newick(input):
   if input[-1] != ';':
     raise TypeError
 
-  input = input[:-1]
+#  input = input[:-1]
 
-  return parse_tree(input)
-
+  #return parse_tree(input)
+  output, rest = parse_tree_rd(input)
+  return output, rest
 
 
 if __name__ == '__main__':
@@ -146,10 +162,12 @@ if __name__ == '__main__':
        "a;",
        " (a,    (  b,  c [hubba]))    ;",
        "(a, (b, (c, (d, e))));",
-       "[This is a tree with for leaves!]((a,b), (c [third leaf],d))[The end];"]
+       "[This is a tree with for leaves!]((a,b), (c [third leaf],d))[The end];",
+       "test;",
+       "(test1,test2);"]
   for s in l:
     tlist = lexer(s)
-    t = parse_newick(tlist)
+    t, r = parse_newick(tlist)
     print "input         : " + s
     print "tokenrepr     : " + str(tlist)
     print "representation: " + str(t)
